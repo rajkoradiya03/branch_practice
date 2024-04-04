@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <style>
+        .first{
+            background-color: cadetblue;
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+        }
+        .second{
+            margin-top: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+            text-align: center;
+        }
+        .third{
+            display: flex;
+            justify-content: center;
+            background-color: aquamarine;
+            text-align: justify;
+            padding: 20px;
+        }
+        .btn{
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #commentsDiv{
+            display: flex;
+            flex-direction: column;
+            background-color: aqua;
+            gap: 10px;
+        }
+        .comment{
+            padding: 10px;
+            margin: 0;
+            /* border-bottom: 1px solid black; */
+        }
+        .title{
+            margin-bottom: 10px;
+            font-size: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div id="userDetails">
+    </div>
+    <div id="commentsDiv">
+    </div>
+    <script>
+        let user = document.getElementById('userDetails');
+        async function showDetail() {
+            let id = window.location.pathname.split('/').pop();
+            console.log(window.location.pathname.split('/').pop());
+            
+            let userData = await fetch(`https://jsonplaceholder.org/posts/${id}`,{
+                method: "get",
+                headers: {
+                    'Content-type': 'application/json;'
+                }
+            })
+    
+            let details = [];
+            details.push(await userData.json()); 
+            
+            details.forEach((d)=>{
+                user.innerHTML = `<div class="first">
+                                    <p>ID: ${d.id}</p>
+                                    <p>UserId: ${d.userId}</p>
+                                    <p>PublishedAt: ${d.publishedAt}</p>
+                                    <p>UpdatedAt: ${d.updatedAt}</p>
+                                </div>
+                                <div class="second">
+                                    <img src="${d.image}">
+                                    <p class="title">Title: ${d.title}</p>
+                                </div>
+                                <div class="third">
+                                    <p>Content: ${d.content}</p>
+                                </div>
+                                <div class="btn">
+                                    <button id="${d.id}" onclick="showComments(this.id) ">Show Comments</button>
+                                </div>`
+            })
+        }
+
+        async function showComments(id){
+            let commentData = await fetch(`https://jsonplaceholder.org/comments/${id}`, {
+                method: 'get',
+                headers: {
+                    'Content-type': 'application/json;'
+                }
+            })
+
+            let comments = (await commentData.json());
+
+            let commentArr = comments['comment'].split(".");
+            let commentsDiv = document.getElementById('commentsDiv');
+            let btn = document.getElementById(id);
+
+            if(btn.innerHTML === "Show Comments"){
+                btn.innerHTML = "Hide Comments";
+                for(let i = 0; i < commentArr.length-1; i++){
+                    commentsDiv.innerHTML += `<p class="comment">${i+1}. ${commentArr[i]}.</p>` 
+                }
+            }else{
+                btn.innerHTML = "Show Comments";
+                commentsDiv.innerHTML = "";
+            }
+        }
+
+        showDetail();
+    </script>
+</body>
+</html>
