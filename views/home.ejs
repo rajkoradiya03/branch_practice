@@ -48,15 +48,6 @@
         let prev = document.getElementById('prev');
         let next = document.getElementById('next');
         function getData(data,page) {
-            // let data = await fetch('https://jsonplaceholder.org/posts', {
-            //     method: "get",
-            //     headers: {
-            //         'Content-type': 'application/json;'
-            //     }
-            // })
-
-            // let rdata = await data.json();
-
             let dataperPage = 10;
             let startIndex = page * dataperPage;
             let lastIndex = startIndex + dataperPage;
@@ -83,14 +74,6 @@
         }
 
        function pageination(data) {
-            // let data = await fetch('https://jsonplaceholder.org/posts', {
-            //     method: "get",
-            //     headers: {
-            //         'Content-type': 'application/json;'
-            //     }
-            // })
-
-            // let rdata = await data.json();
             let dataperPage = 10;
 
             let totalpage = Math.ceil(data.length / dataperPage);
